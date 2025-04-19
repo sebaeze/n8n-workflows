@@ -1,0 +1,240 @@
+{
+  "name": "1_chat_to_pinecone_rag_using_gemini_1.5",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Tu eres un asistente de inteligencia artificial, tu objetivo es interpretar los mensajes de input del usuario y elaborar una respuesta utilizando información que obtengas de la aplicacion 'n8n_informacion_sobre_rag'.\nEl mensaje del usuario es el siguiente: {{ $json.chatInput }}\nTu respuesta debe contener al menos 10 palabras.\nEn caso de no poder encontrar informacion relacionada a la base de datos 'n8n_informacion_sobre_rag', debes responder lo siguiente \"__tonto__\".",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -140,
+        -200
+      ],
+      "id": "26c522b6-00e2-4bf8-b987-06c8a39dc27d",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-1.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        20
+      ],
+      "id": "8103dec6-2f03-4aea-8d13-3600e9e41237",
+      "name": "Google Gemini Chat Model"
+    },
+    {
+      "parameters": {
+        "sendTo": "sebaeze@gmail.com",
+        "subject": "Se uso el asistente de capitales",
+        "message": "=La respuesta de un chat fue: {{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        620,
+        -200
+      ],
+      "id": "904c5bfc-337f-44d7-82e3-d768b9e59611",
+      "name": "Gmail",
+      "webhookId": "f72d63f2-74ec-46d8-a732-c06e8d252f70"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -400,
+        -200
+      ],
+      "id": "f1f64cbe-5fd0-4afe-b1c1-ec97f8b058a8",
+      "name": "Chattt",
+      "webhookId": "5f4333fe-e677-40db-b1cc-284488bb48c8"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -20,
+        40
+      ],
+      "id": "fed8317f-36c9-49ac-9896-7ae323fb50bb",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "name": "n8n_informacion_sobre_rag",
+        "description": "La base de datos contiene informacion sobre tecnologia RAG en el contexto de AI."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "typeVersion": 1,
+      "position": [
+        220,
+        20
+      ],
+      "id": "2d197736-f076-4958-a27a-92d73583bbbe",
+      "name": "Answer questions with a vector store"
+    },
+    {
+      "parameters": {
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "n8n-ai",
+          "mode": "list",
+          "cachedResultName": "n8n-ai"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.1,
+      "position": [
+        140,
+        180
+      ],
+      "id": "837341d0-4e7a-4888-8c63-0263763801fb",
+      "name": "Pinecone Vector Store"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-1.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        480,
+        200
+      ],
+      "id": "4aa8307c-3a91-422c-95cc-97cb8c6f5c76",
+      "name": "Google Gemini Chat Model1"
+    },
+    {
+      "parameters": {
+        "options": {
+          "dimensions": 512
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        160,
+        340
+      ],
+      "id": "f32029a9-200e-4ae0-b443-cdc3a5a012cf",
+      "name": "Embeddings OpenAI"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chattt": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Answer questions with a vector store": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pinecone Vector Store": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Answer questions with a vector store",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Answer questions with a vector store",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "c0df2160-5332-4363-bc33-1c37d1fa4284",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b3b115ae275ef60c1c913f88e8285742fbf254c837c6631bad1aafd8b5774358"
+  },
+  "id": "f9T27iB1nDjsKheO",
+  "tags": []
+}

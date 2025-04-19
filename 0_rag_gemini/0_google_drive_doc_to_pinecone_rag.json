@@ -1,0 +1,185 @@
+{
+  "name": "0_google_drive_doc_to_pinecone_rag",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyHour"
+            }
+          ]
+        },
+        "triggerOn": "specificFile",
+        "fileToWatch": {
+          "__rl": true,
+          "value": "1oOS39WcW_exsSm0eCBuQFvRWJ3hFGtXYvKycW9gK2LA",
+          "mode": "list",
+          "cachedResultName": "INPUT_RAG",
+          "cachedResultUrl": "https://docs.google.com/document/d/1oOS39WcW_exsSm0eCBuQFvRWJ3hFGtXYvKycW9gK2LA/edit?usp=drivesdk"
+        }
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        -460,
+        -20
+      ],
+      "id": "7b6edf81-3554-478f-ae56-b132c5f9ea3f",
+      "name": "Google Drive Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.webViewLink }}",
+          "mode": "url"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -200,
+        -20
+      ],
+      "id": "9052946f-528a-47da-8dc5-968ad1ce7b35",
+      "name": "Google Drive"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "n8n-ai",
+          "mode": "list",
+          "cachedResultName": "n8n-ai"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.1,
+      "position": [
+        20,
+        -20
+      ],
+      "id": "f8e07201-65a7-442a-b4ef-75b755dc4ae2",
+      "name": "Pinecone Vector Store"
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "binaryMode": "specificField",
+        "loader": "docxLoader",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1,
+      "position": [
+        160,
+        200
+      ],
+      "id": "691ae6d6-140e-4c1a-8b0e-ed9d1368bb7b",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "chunkSize": 200,
+        "chunkOverlap": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterTokenSplitter",
+      "typeVersion": 1,
+      "position": [
+        460,
+        420
+      ],
+      "id": "66fad0c1-1a2c-4c8c-a4ce-a1b2d643c660",
+      "name": "Token Splitter1"
+    },
+    {
+      "parameters": {
+        "options": {
+          "dimensions": 512
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -80,
+        220
+      ],
+      "id": "5b42b261-2659-4191-8912-301ba5eea4e3",
+      "name": "Embeddings OpenAI"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Drive Trigger": {
+      "main": [
+        [
+          {
+            "node": "Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Token Splitter1": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "be73ed3c-70dd-4114-a045-bfcab003bd19",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b3b115ae275ef60c1c913f88e8285742fbf254c837c6631bad1aafd8b5774358"
+  },
+  "id": "RAzTPvDxHV4tThNQ",
+  "tags": []
+}
