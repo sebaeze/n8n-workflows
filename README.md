@@ -14,7 +14,7 @@ The repository is organized to facilitate collaboration and sharing of AI-driven
 2. Import the desired workflow JSON files into your N8N instance.
 3. Customize and modify the workflows as needed to suit your automation needs.
 
-## [0_BASIC_AI_AGENT_WITH_POSTGRES_MEMORY.json](./0_BASIC_AI_AGENT_WITH_POSTGRES_MEMORY.json)
+## [Basic AI Agent with memory](./0_BASIC_AI_AGENT_WITH_POSTGRES_MEMORY.json)
 
 This N8N workflow demonstrates how to create an AI Agent capable of responding to user queries about films and series, while maintaining context through Postgres-based memory. It integrates multiple nodes to process chat messages and deliver intelligent responses.
 
