@@ -1,5 +1,5 @@
 {
-  "name": "04_AI_AGENT_WITH_MEMORY",
+  "name": "0_basic_ai_agent_with_postgres_memory",
   "nodes": [
     {
       "parameters": {

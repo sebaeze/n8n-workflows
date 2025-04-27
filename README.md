@@ -14,32 +14,32 @@ The repository is organized to facilitate collaboration and sharing of AI-driven
 2. Import the desired workflow JSON files into your N8N instance.
 3. Customize and modify the workflows as needed to suit your automation needs.
 
-## [Basic AI Agent with memory](./0_BASIC_AI_AGENT_WITH_POSTGRES_MEMORY.json)
+## [Basic AI Agent with memory](./0_basic_ai_agent_with_postgres_memory.json)
 
 This N8N workflow demonstrates how to create an AI Agent capable of responding to user queries about films and series, while maintaining context through Postgres-based memory. It integrates multiple nodes to process chat messages and deliver intelligent responses.
 
-### Workflow Overview
+### Nodes Used
 
-1. Chat Trigger:
-The When chat message received node listens for incoming chat messages and initiates the workflow.
+1. **Chat Trigger (`@n8n/n8n-nodes-langchain.chatTrigger`)**  
+   - **Purpose:** This node triggers the workflow whenever a chat message is received from a user. It serves as the entry point for user interaction.
 
-2. AI Agent:
-The AI Agent node processes user inputs using an expert system message. It is configured to respond only to queries about films or series. If the input is unrelated, it replies: "I can not help you since I only talk about movies and series."
+2. **AI Agent (`@n8n/n8n-nodes-langchain.agent`)**  
+   - **Purpose:** This node acts as the core of the workflow, processing user input messages and generating context-aware responses. It is configured to answer questions about films and series and to reject unrelated queries with a predefined response.
 
-3. Google Gemini Chat Model:
-The Google Gemini Chat Model node provides advanced language understanding to generate responses for the AI Agent.
+3. **Google Gemini Chat Model (`@n8n/n8n-nodes-langchain.lmChatGoogleGemini`)**  
+   - **Purpose:** This node provides advanced language modeling capabilities through the Google Gemini Chat Model. It powers the AI agent's responses with natural language understanding and generation.
 
-4. Postgres Chat Memory:
-The Postgres Chat Memory node stores conversation context in a PostgreSQL database, enabling the agent to maintain a memory window of 3 previous interactions.
+4. **Postgres Chat Memory (`@n8n/n8n-nodes-langchain.memoryPostgresChat`)**  
+   - **Purpose:** This node enables memory storage for chat conversations using a Postgres database. It helps the AI agent maintain context over multiple messages by storing and retrieving recent chat history.
 
-5. Connections
-The Chat Trigger connects to the AI Agent for processing user messages.
-The AI Agent integrates with the Google Gemini Chat Model for language processing and the Postgres Chat Memory for context retention.
+### Workflow Operation
 
-6. Key Features
-Context-aware responses using Postgres memory.
-Restricted to film/series-related queries for focused expertise.
-This workflow is ideal for creating specialized chatbots with persistent memory and advanced language capabilities.
+1. The **Chat Trigger** node listens for incoming chat messages from users.
+2. The message is passed to the **AI Agent**, which interprets the input and determines the appropriate response based on its configuration. If the input is unrelated to films or series, it provides the response: *"I can not help you since I only talk about movies and series."*
+3. The **Google Gemini Chat Model** processes the user input, providing intelligent and contextually relevant responses for the AI agent.
+4. The **Postgres Chat Memory** node stores the chat context in a Postgres database, allowing the AI agent to refer back to previous messages for continuity in conversations.
+5. The workflow completes by delivering the AI agent's response to the user.
+
 
 ## [JIRA to Excel](./1_jira_to_excel.json)
 
