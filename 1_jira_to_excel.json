@@ -1,0 +1,110 @@
+{
+  "name": "1_jira_to_excel",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": true,
+        "options": {
+          "fields": "*navigable",
+          "jql": "created >= -5d  AND status  IN (Done, \"Desarrollo Finalizado\", ASIGNADO, Approval, Activo)  AND issuetype IN (Subtarea, Historia, Tarea)"
+        }
+      },
+      "type": "n8n-nodes-base.jira",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        -40
+      ],
+      "id": "3103df7e-ef8a-43d2-934c-51e93f6302f7",
+      "name": "Jira Software"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -540,
+        -40
+      ],
+      "id": "e475c428-80ad-40fb-816b-7c8a7fcd0c25",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "xlsx",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -20,
+        -40
+      ],
+      "id": "49aa2c9b-5d7d-4547-9ddd-981cbcaeee28",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "/mnt/c/n8n_data/jira.xlsx",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        200,
+        -40
+      ],
+      "id": "735ebf2f-4267-46f3-8f9e-375e9be20463",
+      "name": "Read/Write Files from Disk"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Jira Software",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Jira Software": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "09d7e74e-b234-4313-a5ea-4dd73d51f239",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b3b115ae275ef60c1c913f88e8285742fbf254c837c6631bad1aafd8b5774358"
+  },
+  "id": "EvPnPCzhz5qntYio",
+  "tags": []
+}

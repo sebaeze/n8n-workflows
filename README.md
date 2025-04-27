@@ -41,3 +41,31 @@ Context-aware responses using Postgres memory.
 Restricted to film/series-related queries for focused expertise.
 This workflow is ideal for creating specialized chatbots with persistent memory and advanced language capabilities.
 
+## [JIRA to Excel](./1_jira_to_excel.json)
+
+This N8N workflow  is designed to extract data from Jira based on specific criteria, convert it into an Excel file format, and save it to a specified location on disk. Below is a detailed explanation of the nodes used and how the workflow operates.
+
+### Nodes Overview
+
+1. **Manual Trigger (`n8n-nodes-base.manualTrigger`)**  
+   - **Purpose**: Acts as the starting point of the workflow. This node allows the user to manually trigger the execution of the workflow by clicking the "Test workflow" button.
+
+2. **Jira Software (`n8n-nodes-base.jira`)**  
+   - **Purpose**: Queries Jira issues using JQL (Jira Query Language). In this example, it retrieves all issues created within the last 5 days that match specific statuses and issue types. The data fetched includes all navigable fields.
+
+3. **Convert to File (`n8n-nodes-base.convertToFile`)**  
+   - **Purpose**: Converts the JSON data retrieved from Jira into a file format. In this workflow, the data is converted into an Excel file (`.xlsx`).
+
+4. **Read/Write Files from Disk (`n8n-nodes-base.readWriteFile`)**  
+   - **Purpose**: Saves the generated Excel file to the local file system. The file is written to the path `/mnt/c/n8n_data/jira.xlsx`.
+
+### Workflow Process
+
+1. The **Manual Trigger** starts the workflow when the user clicks the "Test workflow" button.
+2. The **Jira Software** node queries Jira for issues based on the specified JQL criteria and retrieves all relevant fields.
+3. The retrieved data is passed to the **Convert to File** node, which converts the JSON data into an Excel file.
+4. The Excel file is saved to the local disk using the **Read/Write Files from Disk** node.
+
+### Use Case
+
+This workflow is ideal for exporting Jira issues into an Excel file for reporting, analysis, or sharing purposes. It provides a practical example of how to integrate Jira with file operations in n8n.
