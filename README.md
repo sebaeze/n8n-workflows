@@ -69,3 +69,48 @@ This N8N workflow  is designed to extract data from Jira based on specific crite
 ### Use Case
 
 This workflow is ideal for exporting Jira issues into an Excel file for reporting, analysis, or sharing purposes. It provides a practical example of how to integrate Jira with file operations in n8n.
+
+## [AI Agent Gemini Google Sheet](./2_ai_agent_gemini_google_sheet.json)
+
+This N8N workflow is designed to create an AI agent that interprets user queries to identify the appropriate AI model. The workflow integrates with a Google Sheet to retrieve information about AI models and uses a Google Gemini Chat Model for natural language processing. Below is a detailed explanation of the nodes used and how the workflow operates.
+
+### Nodes Overview
+1. **Chat Trigger (`@n8n/n8n-nodes-langchain.chatTrigger`)**  
+   - **Purpose**: Serves as the entry point of the workflow. It listens for user messages and initiates the workflow when a user query is received.
+   - **Functionality**: Captures the user's input (`chatInput`) for processing.
+
+2. **AI Agent (`@n8n/n8n-nodes-langchain.agent`)**  
+   - **Purpose**: Acts as the main AI agent to interpret the user's message and respond accordingly.
+   - **Functionality**:  
+     - Receives the user's query from the Chat Trigger node.
+     - Uses the Google Gemini Chat Model for language understanding and the Google Sheet (`lista_modelos_gemini`) for retrieving AI model information.
+     - Responds in the same language as the user and ensures responses are concise (less than 100 words).  
+     - If no information is found in the Google Sheet, it informs the user with the message: "*** I didn't find information about AI Models in my Database."
+
+3. **Google Gemini Chat Model (`@n8n/n8n-nodes-langchain.lmChatGoogleGemini`)**  
+   - **Purpose**: Provides advanced natural language processing capabilities to interpret and generate responses based on the user's input.
+   - **Functionality**: Processes the user's query and assists the AI Agent in generating a meaningful response.
+
+4. **Google Sheets Tool (`n8n-nodes-base.googleSheetsTool`)**  
+   - **Purpose**: Connects to a Google Sheet (`lista_modelos_gemini`) that contains information about various AI models.
+   - **Functionality**:  
+     - Reads data from the specified Google Sheet to fetch details about AI models.
+     - Provides data to the AI Agent for responding to user queries.
+
+### Workflow Process
+1. The **Chat Trigger** node starts the workflow when a user sends a message.
+2. The **AI Agent** processes the user's query by leveraging the Google Gemini Chat Model for natural language understanding.
+3. The **Google Sheets Tool** fetches relevant information about AI models from the connected Google Sheet (`lista_modelos_gemini`).
+4. The **AI Agent** formulates a response based on the retrieved data or informs the user if no relevant information is found.
+
+### Use Case
+This workflow is ideal for scenarios where users need assistance in selecting the right AI model for their needs. It combines AI-driven natural language processing with structured data retrieval from a Google Sheet to provide accurate and concise responses. The multilingual capability ensures accessibility for users in different languages.
+
+### Configuration
+- **Google Sheet**: Ensure the sheet contains up-to-date information about AI models and is accessible via the specified document ID and sheet name.
+- **Language**: The AI Agent dynamically responds in the user's language, enhancing usability for a global audience.
+
+### Limitations
+- If the Google Sheet does not contain information about a specific AI model, the workflow will notify the user that no relevant data was found.
+
+This workflow demonstrates how to integrate AI capabilities with structured data sources in n8n to create a powerful and user-friendly solution for AI model selection.

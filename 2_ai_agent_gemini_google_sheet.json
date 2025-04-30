@@ -1,0 +1,124 @@
+{
+  "name": "2_ai_agent_gemini_google_sheet",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -580,
+        -40
+      ],
+      "id": "ea9ff720-4d21-4a4e-9006-a8db4ca9ee54",
+      "name": "Chat trigger",
+      "webhookId": "49fe0f8e-df10-459f-bef8-3aa79d896004"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=# Role\nYou are an artificial intelligence (AI) agent, whose purpose is to help the user to idenfity the right AI model.\n\n# Instructions\n- Your main function is to interpret the user's message: {{ $json.chatInput }} and answer.\n\n- If the user request to you information about AI models, You should use the application lista_modelos_gemini in order to look for information about AI models.\n\n- Your response should be in the language of the user. If the user writes in Korean, you should answer in Korean.\n\n- The information that you find in the application 'lista_modelos_gemini' should be shared with the user.\n\n- Your response should contains less than 100 words.\n\n- If you searched for information about AI models and You did not find, you should tell the user the following phrase '*** I didn't find information about AI Models in my Database'",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -360,
+        -40
+      ],
+      "id": "536f063e-f29e-49ad-8194-00c6e6062eed",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -360,
+        160
+      ],
+      "id": "0d1fa91d-12ec-47f6-aa3d-fc282e01f340",
+      "name": "Google Gemini Chat Model"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1XWnd6A-3YGt2iSEqmODyzEA81ei950R1sI6Sn3_vM0c",
+          "mode": "list",
+          "cachedResultName": "lista_modelos_gemini",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XWnd6A-3YGt2iSEqmODyzEA81ei950R1sI6Sn3_vM0c/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "modelos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XWnd6A-3YGt2iSEqmODyzEA81ei950R1sI6Sn3_vM0c/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.5,
+      "position": [
+        -20,
+        140
+      ],
+      "id": "1d073c49-bc21-40c1-b087-29a05265e813",
+      "name": "lista_modelos_gemini"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Chat trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "lista_modelos_gemini": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Argentina/Buenos_Aires",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "8e0eeee6-e607-49f6-b7fc-b4b9c842a721",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b3b115ae275ef60c1c913f88e8285742fbf254c837c6631bad1aafd8b5774358"
+  },
+  "id": "e0qq1IkOzs7rXsQ4",
+  "tags": []
+}
